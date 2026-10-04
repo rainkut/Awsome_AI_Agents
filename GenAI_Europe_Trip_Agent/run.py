@@ -186,18 +186,17 @@ def main():
                 for kind in ("hotel", "rental"):
                     xs = [r["total_inr"] / r["nights"] for r in dedup if r["area"] == area and r["kind"] == kind and (r["rating"] or 0) >= 4]
                     if xs: L.append(f"- {area} [{kind}] median ₹/night (rating>=4, n={len(xs)}): {inr(med(xs))}")
-        L += ["", "## Day-by-day skeleton for BEST OVERALL (refine after live data)", "- Day 1: depart India (overnight flight)",
-              f'- Day 2: arrive {b["route"]["stops"][0]}; check in, light afternoon, early night']
-        day = 3; seq = b["route"]["stops"]
+        L += ["", "## Day-by-day skeleton for BEST OVERALL (refine after live data)", "- Day 1: depart India (overnight flight)"]
+        day = 2; seq = b["route"]["stops"]
         for si, s in enumerate(seq):
-            n = b["alloc"][s]; first = si == 0
-            for k in range(n):
+            n = b["alloc"][s]
+            L.append(f"- Day {day}: " + ("arrive " if si == 0 else "train/flight to ") + f"{s}; check in, light afternoon, early night"); day += 1
+            for k in range(n - 1):
                 if s == "PAR" and k < b["disney_days"]: act = f"Disneyland Paris (RER A, book tickets ahead) - day {k+1} of {b['disney_days']}"
                 elif s == "PAR": act = "Paris sightseeing (1 major sight + park/playground; keep afternoons free)"
                 elif s == "CH": act = "Swiss day: scenic train/cable car + short family walk"
                 else: act = "Italy sightseeing (1 major site, long lunch)"
-                if k == n - 1 and si < len(seq) - 1: act += " | PM: transfer to next base"
-                if not (first and k == 0): L.append(f"- Day {day}: {s} - {act}"); day += 1
+                L.append(f"- Day {day}: {s} - {act}"); day += 1
         L.append(f"- Day {b['days']}: transfer to airport, fly home")
         L += ["", "## Booking order (default; confirm after live data)", "1. Flights (fares move fastest)", "2. Schengen visa appointments (apply 3 months ahead - do this in parallel)",
               "3. Accommodation (free-cancellation)", "4. Disneyland tickets (date-specific)", "5. Intercity trains (SBB/SNCF open ~3-4 months ahead)", "6. Insurance, 7. Other attractions"]
