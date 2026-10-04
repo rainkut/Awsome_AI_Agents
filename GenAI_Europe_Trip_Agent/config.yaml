@@ -1,0 +1,105 @@
+# Europe family trip agent -- all tunables live here.
+# Anything marked ESTIMATE is a prior assumption (dated), NOT a verified price.
+assumptions_date: 2026-10-04
+
+trip:
+  depart_date: 2027-05-27          # primary plan
+  fallback_depart_date: 2027-03-27 # use with --fallback if May looks too early/expensive
+  durations: [7, 8, 9, 10]         # days, includes international travel days
+  adults: 2
+  children: 2
+  children_ages: [7, 8]
+  currency: INR
+  home: AMD
+
+origins: [AMD, BOM, DEL]
+
+# Positioning from home (AMD) to another origin. Looked up live when possible, else ESTIMATE.
+positioning:
+  AMD: {family_return_inr: 0, extra_hotel_nights: 0}
+  BOM: {family_return_inr: 30000, extra_hotel_nights: 1, hotel_night_inr: 6000, friction_inr: 3000}  # ESTIMATE
+  DEL: {family_return_inr: 32000, extra_hotel_nights: 1, hotel_night_inr: 6000, friction_inr: 3000}  # ESTIMATE
+
+fx:   # ESTIMATE -- update before trusting any non-INR figure
+  EUR: 100.0
+  CHF: 106.0
+
+cities:
+  PAR:
+    name: Paris
+    airports: "CDG,ORY"
+    min_nights: 3
+    attraction_score: 95
+    hotel_q: "Paris aparthotel family"
+    hotel_night_family_eur: {low: 170, real: 230, high: 320}    # ESTIMATE
+  CH:
+    name: Switzerland (Interlaken area)
+    gateways: [ZRH, GVA]
+    min_nights: 2
+    attraction_score: 95
+    hotel_q: "Interlaken apartment family"
+    hotel_night_family_chf: {low: 230, real: 310, high: 430}    # ESTIMATE
+  IT:
+    name: Italy
+    gateways: {ROM: FCO, MIL: "MXP,LIN"}
+    min_nights: 2
+    attraction_score: 85
+    hotel_q: "apartment family"
+    hotel_night_family_eur: {low: 140, real: 190, high: 270}    # ESTIMATE
+
+# Hours door-to-door between stays (ESTIMATE) and family cost in EUR/CHF-equivalent EUR (ESTIMATE)
+transfers:
+  PAR-CH:  {hours: 5.5, eur: {low: 250, real: 380, high: 520}}
+  PAR-MIL: {hours: 8.0, eur: {low: 250, real: 400, high: 600}}   # flight often cheaper/faster
+  PAR-ROM: {hours: 3.5, eur: {low: 220, real: 380, high: 600}}   # flight
+  CH-MIL:  {hours: 4.0, eur: {low: 150, real: 230, high: 330}}
+  CH-ROM:  {hours: 7.5, eur: {low: 250, real: 380, high: 550}}
+  MIL-ROM: {hours: 3.5, eur: {low: 120, real: 200, high: 320}}
+max_transfer_hours: 8.0
+
+fixed_costs_eur:       # family of 4, ESTIMATE
+  disney:
+    1: {low: 260, real: 340, high: 430}
+    2: {low: 480, real: 620, high: 780}
+    transport_per_day: {low: 25, real: 35, high: 45}
+  paris_local_per_day: {low: 18, real: 28, high: 40}
+  airport_transfer_one_way: {low: 35, real: 55, high: 90}
+  swiss_local_per_day: {low: 20, real: 45, high: 90}
+  attractions_per_city: {PAR: {low: 80, real: 160, high: 260}, CH: {low: 100, real: 260, high: 480}, IT: {low: 60, real: 140, high: 240}}
+  food_per_day:
+    eat_out:  {low: 110, real: 150, high: 200}
+    cook:     {low: 55, real: 80, high: 110}
+  schengen_visa_family_eur: 270     # 2x EUR90 adults + 2x EUR45 children, before service fee
+  visa_service_fee_inr: 8000        # ESTIMATE
+  insurance_family_inr: {low: 6000, real: 9000, high: 14000}
+  misc_pct: 0.05
+
+flight_filter:
+  max_total_minutes_one_way: 1500
+  reject_overnight_layover: true
+  max_layover_minutes: 360
+  min_layover_minutes: 60
+
+flight_score_weights: {price: 35, duration: 20, stops: 15, timing: 10, baggage: 5, airline: 10, family: 5}
+airline_quality:       # 0-100 prior, edit freely
+  default: 60
+  "Air France": 75
+  "Swiss": 85
+  "Lufthansa": 78
+  "Emirates": 88
+  "Qatar Airways": 88
+  "Etihad": 80
+  "Turkish Airlines": 76
+  "KLM": 76
+  "British Airways": 72
+  "Virgin Atlantic": 74
+  "IndiGo": 62
+  "Air India": 58
+  "Air India Express": 50
+
+itinerary_score_weights: {cost: 25, comfort: 20, attractions: 20, transport: 15, accommodation: 10, flights: 10}
+
+search:
+  coarse_duration: 8     # stage 1 searches every airport pair at this duration only
+  top_pairs_for_other_durations: 6
+  max_api_calls: 120     # hard cap per run; cached calls are free

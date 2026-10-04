@@ -1,0 +1,4 @@
+# Optional manual overrides applied AFTER the rule-based soft scores (0-100).
+# Key = itinerary label as printed in itineraries.csv, e.g. "PAR > CH(ZRH)|8d|disney1". Example:
+# "PAR > CH(ZRH)|9d|disney2": {comfort: 80, attractions: 90}
+overrides: {}
