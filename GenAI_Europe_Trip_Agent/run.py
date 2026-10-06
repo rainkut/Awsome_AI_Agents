@@ -8,7 +8,7 @@ from trip_agent import flights as F, hotels as H, itineraries as I
 HERE = pathlib.Path(__file__).parent
 PAR_AREAS = ["Montmartre Paris", "Latin Quarter Paris", "Bastille Paris", "Marne-la-Vallee Disneyland Paris"]
 CH_AREAS = ["Interlaken", "Interlaken Ost", "Lauterbrunnen", "Grindelwald", "Zurich"]
-IT_AREAS = {"ROM": "Rome", "MIL": "Milan"}
+IT_AREAS = {"ROM": "Rome", "MIL": "Milan, Italy"}
 
 
 def load_env():

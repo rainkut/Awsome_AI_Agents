@@ -34,11 +34,13 @@ class Serp:
                 if self.live_calls >= self.max_calls:
                     raise QuotaExceeded(f"call cap {self.max_calls} reached")
                 r = requests.get(API, params={**params, "api_key": self.key}, timeout=60)
-                r.raise_for_status()
+                if not r.ok:
+                    raise RuntimeError(f"SerpApi {r.status_code}: {r.text[:300]}")
                 data = r.json()
                 self.live_calls += 1
             rec = {"params": params, "searched_at": now(), "mock": bool(self.mock), "data": data}
-            f.write_text(json.dumps(rec))
+            if not (isinstance(data, dict) and data.get('error')):
+                f.write_text(json.dumps(rec))
         md = rec["data"].get("search_metadata", {})
         url = md.get("google_flights_url") or md.get("google_hotels_url") or md.get("json_endpoint", "")
         return rec["data"], rec["searched_at"], url

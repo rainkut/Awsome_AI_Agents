@@ -4,7 +4,7 @@ import statistics
 
 def search_city(serp, city_key, q, check_in, check_out, trip, rentals=False):
     params = {"engine": "google_hotels", "q": q, "check_in_date": check_in, "check_out_date": check_out,
-              "adults": trip["adults"], "children_ages": ",".join(map(str, trip["children_ages"])),
+              "adults": trip["adults"], "children": len(trip["children_ages"]), "children_ages": ",".join(map(str, trip["children_ages"])),
               "currency": trip["currency"], "hl": "en", "gl": "in", "sort_by": 3}
     if rentals:
         params["vacation_rentals"] = "true"
